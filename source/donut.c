@@ -43,8 +43,6 @@ static fvec3 rot_z(fvec3 v, float a) {
 }
 
 void init_donut_frames() {
-    static const char shades[] = ".,-~:;=!*#$@";
-
     for (int i = 0; i < 256; ++i) {
         float A = i * step;
         float B = i * step * 2.0f;
@@ -72,8 +70,9 @@ void init_donut_frames() {
                 zbuffer[x * RESY + y] = inv_z;
 
                 float L = n.x * light.x + n.y * light.y + n.z * light.z;
-                int idx = L > 0 ? (int)(L * 11.99f) : 0;
-                donut_frames[i][x * RESY + y] = shades[idx];
+                if (L < 0.0f) L = 0.0f;
+                if (L > 1.0f) L = 1.0f;
+                donut_frames[i][x * RESY + y] = (unsigned char)roundf(L * 255.0f + 0.5f);
             }
         }
     }

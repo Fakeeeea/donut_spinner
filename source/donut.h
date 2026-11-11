@@ -11,5 +11,4 @@
 
 void init_donut_frames();
 
-
 #endif //DONUT_SPINNER_DONUT_H
