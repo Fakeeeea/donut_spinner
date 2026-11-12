@@ -20,9 +20,11 @@ typedef struct fvec3{
     float x,y,z;
 }fvec3;
 
-extern char donut_frames[NUM_BYTES][RESX * RESY];
-extern const float step;
-extern const float TWO_PI;
+extern unsigned char donut_frames[NUM_BYTES][RESX * RESY];
+
+const float TWO_PI = 2.0f * (float)M_PI;
+const float step = TWO_PI / 256.0f;
+
 const fvec3 light = { 0.0f, 0.7071f, -0.7071f};
 
 float zbuffer[RESX * RESY];
@@ -66,13 +68,13 @@ void init_donut_frames() {
                 int y = (int)(RESY / 2 - K * p.y * inv_z);
 
                 if (x < 0 || x >= RESX || y < 0 || y >= RESY) continue;
-                if (inv_z <= zbuffer[x * RESY + y]) continue;
-                zbuffer[x * RESY + y] = inv_z;
+                if (inv_z <= zbuffer[y * RESX + x]) continue;
+                zbuffer[y * RESX + x] = inv_z;
 
                 float L = n.x * light.x + n.y * light.y + n.z * light.z;
                 if (L < 0.0f) L = 0.0f;
                 if (L > 1.0f) L = 1.0f;
-                donut_frames[i][x * RESY + y] = (unsigned char)roundf(L * 255.0f + 0.5f);
+                donut_frames[i][y * RESX + x] = (unsigned char)roundf(L * 255.0f);
             }
         }
     }
