@@ -12,6 +12,7 @@
 #include <limits.h>
 
 #define FRAMES_STALL 2
+#define EASE_DIV 6
 #define FPS 60
 
 extern unsigned char donut_frames[NUM_BYTES][RESX * RESY];
@@ -41,8 +42,13 @@ void encode_file(char* in, char* out) {
         int dir = (diff <= 128) ? 1 : -1;
         int steps = (diff <= 128) ? diff : 256 - diff;
 
-        for (int s = 1; s < steps; ++s) {
-            emit_frame(fptr_out, (old_byte + dir * s) & 0xFF);
+        int pos = 0;
+        for (;;) {
+            int step = (steps - pos) / EASE_DIV;
+            if (step < 1) step = 1;
+            pos += step;
+            if (pos >= steps) break;
+            emit_frame(fptr_out, (old_byte + dir * pos) & 0xFF);
         }
 
         for (int i = 0; i < FRAMES_STALL; ++i) {
