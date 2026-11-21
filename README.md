@@ -1,5 +1,9 @@
 # Donut spinner
 
+<div align="center">
+    <img src="assets/showcase.png" alt="donut_image" width="50%">
+</div>
+
 Encode a file into a video of a spinning donut!
 Each byte is converted into a frame of a donut, each representing a certain angle.
 The donut, by spinning from one angle to another, encodes a certain file. The decoder just waits
